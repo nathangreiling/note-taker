@@ -1,8 +1,10 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs')
+const {v4 : uuidv4} = require('uuid')
 const PORT = process.env.PORT || 3002;
 const app = express();
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -36,8 +38,8 @@ app.post("/api/notes", (req, res) => {
       }
 
       note = JSON.parse(note);
-      let incrementId = note[note.length - 1].id + 1;
-      let addNotes = { title: req.body.title, text: req.body.text, id: incrementId };
+      let uId = uuidv4();
+      let addNotes = { title: req.body.title, text: req.body.text, id: uId};
       let currentNotes = note.concat(addNotes);
   
       fs.writeFile(__dirname + '/db/db.json', JSON.stringify(currentNotes), (error, data) => {
